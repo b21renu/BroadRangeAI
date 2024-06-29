@@ -1,5 +1,9 @@
 # BroadRangeAI
 
+## Mission
+Paste, Play, Discover :: Your Multilingual Video Adventure!
+Seamlessly explore YouTube videos with our platform. From translating content to accessing detailed transcripts, asking questions, and even breaking language barriers, we've got it all. Simply paste your YouTube URL and open the door to a world of multilingual possibilities
+
 ## What does our Platform provide
 Welcome to our all-in-one platform! If you ever find yourself wanting to understand a video in a different language, have questions about the content, or need to share video information via email or want to understand which particular event takes place at a particular time in a YouTube video, you're in the right place. Our website offers a seamless 4-in-1 solution for all your needs.
 
