@@ -1,0 +1,9 @@
+Flask
+Werkzeug
+# openai==0.28.0
+openai
+youtube_transcript_api
+langdetect
+translate
+langchain
+googletrans==4.0.0-rc1

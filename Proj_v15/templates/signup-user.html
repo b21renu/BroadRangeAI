@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f4;
+            background-image: url('https://i.gifer.com/J4o.gif');
+            background-size: cover;
+            color: #333;
+            line-height: 1.6;
+        }
+        .form {
+            background-color: rgb(241, 158, 4);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #333;
+            align-items: center;
+            z-index: 2;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            overflow: auto;
+        }
+
+
+        .form h2 {
+            text-align: center;
+            font-size: xxx-large;
+            font-weight: bolder;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .form p {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: x-large;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .error {
+            color: rgb(0, 0, 0);
+            margin-top: 5px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group input[type="submit"] {
+            background-color: #000000;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #000000;
+        }
+    </style>
+    <script>
+        function validateEmail() {
+            var emailInput = document.getElementById("email");
+            var emailError = document.getElementById("emailError");
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailInput.value.trim() === '') {
+                emailError.textContent = 'Email address is required';
+                return false;
+            } else if (!emailRegex.test(emailInput.value)) {
+                emailError.textContent = 'Invalid email address';
+                return false;
+            } else {
+                emailError.textContent = '';
+                return true;
+            }
+        }
+
+        function handleUp() {
+            // document.getElementById('signal').value = signal;
+            if (validateEmail()) {
+                document.getElementById('signal').value = 'signup';
+                // document.getElementById('signupForm').action = '/' + signal;
+                document.getElementById('signupForm').submit();
+                window.location.href = '/page';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="form">
+                <form id="signupForm" action="/send" method="POST" onsubmit="return validateEmail();" autocomplete="">
+                    <h2 class="text-center">Signup Form</h2>
+                    <p class="text-center">It's quick and easy.</p>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="name" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" id="email" name="email" placeholder="Email Address" required>
+                        <div id="emailError" class="error"></div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="cpassword" placeholder="Confirm password" required>
+                    </div>
+                    <input type="hidden" name="signal" id="signal" value="signup">
+                    <div class="form-group">
+                        <input class="form-control" type="submit" name="signup" value="Signup" onclick="handleUp()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
