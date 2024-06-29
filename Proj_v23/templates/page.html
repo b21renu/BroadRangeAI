@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilanguage URL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="logins">
+        <img src="https://static.wixstatic.com/media/9ba547_f7c0ef7b31e2498e8b0e819ae7986fa1~mv2.jpg/v1/fill/w_85,h_79,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/BroadrangeAI_logo.jpg" alt="Your Logo">
+    </div>
+    
+    <button><a href="/" style="color:white; text-decoration: none;">LogOut</a></button>
+    <div class="container">
+        <h1>Multilanguage URL</h1>
+        <p>Get AI-generated answers from YouTube transcripts!</p>
+         
+        <label for="youtube_url">Enter YouTube URL:</label>
+        <input type="text" id="youtube_url" placeholder="e.g., https://www.youtube.com/watch?v=your_video_id">
+        <button onclick="processUrl()">Process Transcript</button>
+        <button onclick="printTranscript()">Print Transcript</button>
+        <br><br><div id="youtube-video"></div>
+
+        <div class="upload-container">
+            <h2>Upload Multiple Files</h2>
+            <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="files[]" multiple>
+                <button type="submit">Upload Files</button>
+            </form>
+            <br>
+            <!-- Display file list -->
+            <!-- <div id="fileList"></div> -->
+            <!-- <br> -->
+            <!-- Display summarized content -->
+            <div id="summaries">
+                <!-- Summarized content will appear here -->
+            </div>
+        </div>
+        
+        <!-- Added options below the upload button -->
+        <div class="info-options">
+            <button onclick="infoFromPDF()">Info from PDF</button>
+            <button onclick="infoFromVideo()">Info from Video</button>
+            <button onclick="infoFromBoth()">Info from Both</button>
+        </div>
+        
+        <div id="loading" class="loading"></div>
+        <label for="question">Ask a Question:</label>
+        <input type="text" id="question" placeholder="Your question here">
+        
+        <label for="target_language">Target Language:</label>
+        <select id="target_language" name="target_language" onchange="handleLanguageSelection(this)">
+            <option value="">Select Target Language</option>
+            <option value="en">English</option>
+            <option value="kn">Kannada</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+            <option value="te">Telugu</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="pt">Portuguese</option>
+            <option value="mr">Marathi</option>
+            <option value="ru">Russian</option>
+            <option value="ja">Japanese</option>
+            <option value="zh">Chinese</option>
+            <option value="ar">Arabic</option>
+            <option value="bn">Bengali</option>
+            <option value="pa">Punjabi</option>
+            <option value="ms">Malay</option>
+            <option value="sw">Swahili</option>
+            <option value="ko">Korean</option>
+            <option value="tr">Turkish</option>
+            <option value="vi">Vietnamese</option>
+            <option value="th">Thai</option>
+            <option value="he">Hebrew</option>
+            <option value="id">Indonesian</option>
+            <option value="other">Other Language</option>
+        </select>
+        <a href="https://localizely.com/iso-639-1-list/" target="_blank" id="help_link" style="display: none;">Help</a>
+        <input type="text" id="other_language_textbox" style="display: none;" placeholder="Enter target language code">
+        
+        <input type="hidden" id="content_type" name="content_type" value="both">
+        <button onclick="askQuestion()">Ask Question</button>
+        <div id="transcript" class="transcript">
+            <p>Ask your question</p>
+        </div>
+
+        <div id="email-section">
+            <h2>Send Email</h2>
+            <div id="email_inputs">
+                <label for="to_emails">Recipient Emails:</label>
+                <div class="email-input">
+                    <input type="email" class="to-email" placeholder="Recipient's Email">
+                    <button onclick="removeEmailField(this)">Remove</button>
+                </div>
+            </div>
+        
+            <button onclick="addEmailField()">Add Email</button>
+            <label for="email_subject">Email Subject:</label>
+            <input type="text" id="email_subject" placeholder="Subject" value="{{ email_subject }}">
+            <label for="email_content">Email Content:</label>
+            <textarea id="email_content" placeholder="Your email content here">{{ email_content }}</textarea>
+            
+            <input type="hidden" name="signal" id="signal" value="email">
+            <button onclick="sendEmail()">Send Email</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+
+        function processUrl() {
+            const youtubeUrl = document.getElementById("youtube_url").value;
+            displayLoading();
+            //document.getElementById("question").disabled = false;
+
+            fetch('/process_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `youtube_url=${encodeURIComponent(youtubeUrl)}`,
+            })
+            .then(response => response.json())
+            .then(result => {
+                displayTranscript("Ask your question");
+                if (!result.transcript) {
+                    document.getElementById("question").disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayTranscript("An error occurred during processing.");
+
+                document.getElementById("question").disabled = false;
+            });
+
+
+        var videoId = extractVideoId(youtubeUrl); // Implement a function to extract video ID from URL
+
+        // Create the iframe element
+        var iframe = document.createElement("iframe");
+
+        // Set iframe attributes
+        iframe.setAttribute("width", "560");
+        iframe.setAttribute("height", "315");
+        iframe.setAttribute("src", "https://www.youtube.com/embed/" + videoId+ "?autoplay=1");
+        iframe.setAttribute("frameborder", "0");
+
+
+        // Append iframe to the div
+        var container = document.getElementById("youtube-video");
+        container.appendChild(iframe);
+
+        // Function to extract video ID from YouTube URL
+        function extractVideoId(url) {
+            var regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+            var match = url.match(regExp);
+            if (match && match[1].length === 11) {
+                return match[1];
+            } else {
+                return 'invalid';
+            }
+        }
+
+        }
+
+        // Function to handle file selection and display
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            const fileList = document.getElementById('fileList');
+
+            // Clear previous entries
+            fileList.innerHTML = '';
+
+            // Display each selected file
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const listItem = document.createElement('div');
+                listItem.className = 'file-item';
+
+                const fileName = document.createElement('span');
+                fileName.textContent = file.name;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', function() {
+                    listItem.remove(); // Remove the file item from display
+                });
+
+                listItem.appendChild(fileName);
+                listItem.appendChild(removeButton);
+                fileList.appendChild(listItem);
+            }
+        }
+
+        // Attach event listener to file input
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+        // Function to display summarized content
+        function displaySummaries(summaries) {
+            const summariesContainer = document.getElementById('summaries');
+            summariesContainer.innerHTML = '';
+
+            summaries.forEach((summary, index) => {
+                const summaryItem = document.createElement('div');
+                summaryItem.className = 'summary-item';
+                summaryItem.innerHTML = `
+                    <h3>File ${index + 1} Summary:</h3>
+                    <p>${summary}</p>
+                `;
+                summariesContainer.appendChild(summaryItem);
+            });
+        }
+        
+        // Function to handle form submission (upload)
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(summaries => {
+                displaySummaries(summaries);
+            })
+            .catch(error => {
+                console.error('Error uploading files:', error);
+            });
+        });
+
+
+        function infoFromPDF() {
+            document.getElementById("content_type").value = "pdf";
+            alert("Info from PDF selected");
+        }
+        function infoFromVideo() {
+            document.getElementById("content_type").value = "url";
+            // alert("Info from Video selected");
+        }
+        function infoFromBoth() {
+            document.getElementById("content_type").value = "both";
+            // alert("Info from Both selected");
+        }
+        function askQuestion() {
+            let question = document.getElementById("question").value;
+            let targetLanguage = document.getElementById("target_language").value;
+            let otherLanguageTextbox = document.getElementById("other_language_textbox").value;
+            let contentType = document.getElementById("content_type").value;
+            let formData = new FormData();
+            
+            formData.append("question", question);
+            formData.append("target_language", targetLanguage || 'en');
+            formData.append("content_type", contentType);
+            if (targetLanguage === "other") {
+                formData.append("other_language_textbox", otherLanguageTextbox);
+            }
+            fetch("/ask_question", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById("transcript").innerText = data.answer;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+        function addEmailField() {
+            var emailInputsDiv = document.getElementById("email_inputs");
+            var newEmailInput = document.createElement("div");
+            newEmailInput.innerHTML = '<input type="email" class="to-email" placeholder="Recipient\'s Email"> \
+                                        <button onclick="removeEmailField(this)">Remove</button>';
+            emailInputsDiv.appendChild(newEmailInput);
+        }
+    
+        function removeEmailField(button) {
+            var emailInputsDiv = document.getElementById("email_inputs");
+            emailInputsDiv.removeChild(button.parentNode);
+        }
+    </script>
+</body>
+</html>
