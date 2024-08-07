@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Scheduler</title>
+    <style>
+        /* CSS Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            background-color: rgb(5, 41, 95);
+            background-image: url('https://www.unite.ai/wp-content/uploads/2022/03/AI-marketing-tools.png');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            color: rgb(58, 172, 210);
+            line-height: 2;
+            padding: 20px;
+            border: 5px dashed lightcyan;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-transform: uppercase;
+            
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: lightblue;
+            z-index: -1;
+            
+        }
+
+        body::before {
+            top: 10px;
+            left: 10px;
+            background-image: url('https://media.licdn.com/dms/image/D560BAQHRYN2nok5dVA/company-logo_200_200/0/1685798552420?e=1712188800&v=beta&t=JpGxp59Z9L8f8uxNUa5xgdV8ekung-Z8xnSwDrfl4Co');
+            background-size: cover;
+            background-position: center;
+            
+        }
+
+        body::after {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: black;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .container::after {
+            content: '🤖';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            animation: rotateEmoji 2s linear infinite;
+        }
+
+        @keyframes rotateEmoji {
+            from {
+                transform: rotate(0);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #83c1ff;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(24, 109, 194, 0.5);
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4d8ed2;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 14px 24px;
+            border: 2px solid #4d8ed2;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background-color: #033a75;
+            transform: translateY(4px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="email"] {
+            width: 70%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 2px solid #4d8ed2;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
+            background-color: white;
+        }
+
+        input[type="email"]:focus {
+            animation: pulsate 1s infinite alternate;
+        }
+
+        @keyframes pulsate {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.05);
+            }
+        }
+
+        #loginSection,
+        #subscriptionsSection {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: black;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #subscriptionsSection {
+            display: none;
+        }
+
+        .channel-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .channel-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .videos-list {
+            margin-left: 20px;
+            display: none;
+            background-color: rgba(0, 0, 128, 0.6);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .videos-list a {
+            color: lightblue;
+            text-decoration: none;
+        }
+
+        .videos-list a:hover {
+            text-decoration: underline;
+        }
+
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            button {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('emailAdd').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                fetch('/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('emailSection').style.display = 'none';
+                        document.getElementById('subscriptionsSection').style.display = 'block';
+                        loadSubscriptions();
+                    } else {
+                        alert('Authentication failed. Please try again.');
+                    }
+                });
+            });
+
+            function loadSubscriptions() {
+                fetch('/subscriptions')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const subscriptionsList = document.getElementById('subscriptionsList');
+                        subscriptionsList.innerHTML = '';
+                        data.subscriptions.forEach(sub => {
+                            const li = document.createElement('li');
+                            li.classList.add('channel-item');
+                            li.innerHTML = `
+                                <button onclick="toggleVideos('${sub.channel_id}', this)">${sub.channel_title}</button>
+                                <ul class="videos-list" id="videos-${sub.channel_id}"></ul>
+                            `;
+                            subscriptionsList.appendChild(li);
+                        });
+                    } else {
+                        alert('Failed to load subscriptions.');
+                    }
+                });
+            }
+
+            window.toggleVideos = function(channelId, buttonElement) {
+                const videosList = document.getElementById(`videos-${channelId}`);
+                if (videosList.style.display === 'none') {
+                    fetch(`/channel/${channelId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            videosList.innerHTML = '';
+                            data.videos.forEach(video => {
+                                const li = document.createElement('li');
+                                li.innerHTML = `<a href="https://www.youtube.com/watch?v=${video.video_id}" target="_blank">${video.video_title}</a> - Published at: ${video.published_at}`;
+                                videosList.appendChild(li);
+                            });
+                            videosList.style.display = 'block';
+                        } else {
+                            alert('Failed to load videos.');
+                        }
+                    });
+                } else {
+                    videosList.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="emailSection">
+        <h1>Login </h1>
+        <h3>Latest Vids from Your Fav Channels - Just a Click Away!</h3>
+        <form id="emailAdd">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <button type="submit">SUBMIT</button>
+        </form>
+    </div>
+
+    <div id="subscriptionsSection" style="display:none;">
+        <h1>Your Subscriptions</h1>
+        <ul id="subscriptionsList" class="channel-list"></ul>
+    </div>
+</body>
+</html>
