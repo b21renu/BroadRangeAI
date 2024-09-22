@@ -17,17 +17,17 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-CLIENT_SECRET_FILE = 'C:/Users/renub/CODING/BroadRangeAI/Proj_v25/client_secret_144601179279-8cs8egve4cnjpv83gc5omdavi80tbnog.apps.googleusercontent.com.json'
+CLIENT_SECRET_FILE = 'C:/Users/renub/CODING/BroadRangeAI/Proj_v25/client_secret_.apps.googleusercontent.com.json'
 SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 
-openai.api_key = 'sk-proj-uXNgWW9fXybkDpe9ItRYT3BlbkFJNvhn8RoHVzvMJAkcMabW'
+openai.api_key = ''
 
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'botmyurl@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zoki lhrj pncf dnuo'
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_DEFAULT_SENDER'] = 'botmyurl@gmail.com'
 
 mail = Mail(app)
