@@ -17,7 +17,7 @@ def send_email(to_email, subject, content):
     smtp_server = 'smtp.gmail.com'
     smtp_port = 587
     smtp_username = 'botmyurl@gmail.com'
-    smtp_password = 'zoki lhrj pncf dnuo'
+    smtp_password = ''
 
     msg = MIMEMultipart()
     msg['From'] = from_email
@@ -115,7 +115,7 @@ def answer_question_with_transformers(transcript, question, target_language):
     input_text = f"Video transcript: {truncated_transcript}. Question: {question}"
 
     try:
-        openai.api_key = 'sk-proj-uXNgWW9fXybkDpe9ItRYT3BlbkFJNvhn8RoHVzvMJAkcMabW'
+        openai.api_key = ''
         response = openai.ChatCompletion.create(
             #model="gpt-4",
             model="gpt-3.5-turbo",
@@ -148,7 +148,7 @@ def a_q_w_t_pdf(pdf_summary, question, target_language):
     input_text = f"PDF Summary: {pdf_summary}. Question: {question}"
 
     try:
-        openai.api_key = 'sk-proj-uXNgWW9fXybkDpe9ItRYT3BlbkFJNvhn8RoHVzvMJAkcMabW'
+        openai.api_key = ''
         response = openai.ChatCompletion.create(
             #model="gpt-4",
             model="gpt-3.5-turbo",
@@ -182,7 +182,7 @@ def a_q_w_t_both(pdf_summary,transcript, question, target_language):
     input_text = f"PDF summary:{pdf_summary}. Video transcript: {truncated_transcript}. Question: {question}"
 
     try:
-        openai.api_key = 'sk-proj-uXNgWW9fXybkDpe9ItRYT3BlbkFJNvhn8RoHVzvMJAkcMabW'
+        openai.api_key = ''
         response = openai.ChatCompletion.create(
             #model="gpt-4",
             model="gpt-3.5-turbo",
