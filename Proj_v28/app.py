@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'your_secret_key_here'
 
 # Configure OpenAI API key
-openai.api_key = 'sk-proj-uXNgWW9fXybkDpe9ItRYT3BlbkFJNvhn8RoHVzvMJAkcMabW'
+openai.api_key = ''
 
 # Initialize Google Translator
 translator = Translator()
@@ -29,7 +29,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'botmyurl@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zoki lhrj pncf dnuo'
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_DEFAULT_SENDER'] = 'botmyurl@gmail.com'
 mail = Mail(app)
 
